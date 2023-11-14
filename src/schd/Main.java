@@ -28,7 +28,6 @@ public class Main {
         for(String day: week){
             schedule.put(day, new ArrayList<>());
         }
-        System.out.println(schedule.toString());
         ArrayList<Lesson> curriculum = new ArrayList<>();
         curriculum.add(new Lesson(1 ,1, "предмет 1" ));
         curriculum.add(new Lesson(1 ,2, "предмет 2" ));
@@ -94,7 +93,6 @@ public class Main {
         while(lessonIndex < lessons.size()){
             Lesson lesson = lessons.get(lessonIndex);
             int currentHours = lesson.getAcademicHour();
-            int dayDifference = 0;
             for(Map.Entry<String, ArrayList<Lesson>> entry : schedule.entrySet()){
                 ArrayList<Lesson> dayLessons = entry.getValue();
                 if(dayLessons.size() >= maxPairs) continue;
@@ -103,7 +101,6 @@ public class Main {
                     currentHours--;
                 }
                 if(currentHours == 0) break;
-                dayDifference++;
             }
             lessonIndex++;
         }

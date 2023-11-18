@@ -35,4 +35,8 @@ public class Lesson {
         this.name = name;
     }
     public Lesson(){}
+    public boolean compare(Lesson lesson){
+        return this.name.equals(lesson.getName()) && this.course == lesson.getCourse() && this.academicHour == lesson.getAcademicHour();
+    }
+
 }

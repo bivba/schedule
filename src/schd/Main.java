@@ -2,13 +2,22 @@ package schd;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.apache.commons.cli.Options;
+import org.checkerframework.checker.units.qual.N;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.*;
 
 public class Main {
+    static ArrayList<Lesson> curriculum;
+    static ArrayList<Professor> professors;
+    static Map<String, ArrayList<Lesson>> schedule;
+    static Table<Integer, Integer, Map<String, ArrayList<String>>> itinerary;
+    static Map<Integer, ArrayList<Group>> courseMap;
     public static void main(String[] args) throws IOException {
         ArrayList<String> week = new ArrayList<>();
         week.add("Понедельник");
@@ -17,39 +26,39 @@ public class Main {
         week.add("Четверг");
         week.add("Пятница");
 
-
-        Map<Integer, ArrayList<Group>> course = new HashMap<>();
-        course.put(1, new ArrayList<>());
+        courseMap = new HashMap<>();
+        courseMap.put(1, new ArrayList<>());
         for(int i = 0; i < 7; i++){
-            course.get(1).add(new Group(i));
+            courseMap.get(1).add(new Group(i));
         }
 
-        Map<String, ArrayList<Lesson>> schedule = new HashMap<>();
+        schedule = new HashMap<>();
         for(String day: week){
             schedule.put(day, new ArrayList<>());
         }
-        ArrayList<Lesson> curriculum = new ArrayList<>();
-        curriculum.add(new Lesson(1 ,1, "предмет 1" ));
-        curriculum.add(new Lesson(1 ,2, "предмет 2" ));
-        curriculum.add(new Lesson(1 ,2, "предмет 3" ));
-        curriculum.add(new Lesson(1 ,4, "предмет 4" ));
-        curriculum.add(new Lesson(1 ,1, "предмет 5" ));
-        curriculum.add(new Lesson(1 ,1, "предмет 6" ));
-        curriculum.add(new Lesson(1 ,2, "предмет 7" ));
-        ArrayList<Professor> professors = new ArrayList<>();
-        professors.add(new Professor("преп 1", "предмет 1"));
-        professors.add(new Professor("преп 2", "предмет 2"));
-        professors.add(new Professor("преп 3", "предмет 3"));
-        professors.add(new Professor("преп 4", "предмет 4"));
-        professors.add(new Professor("преп 5", "предмет 5"));
-        professors.add(new Professor("преп 6", "предмет 6"));
-        professors.add(new Professor("преп 7", "предмет 7"));
-        Table<Integer, Integer, Map<String, ArrayList<String>>> itinerary = makeSchedule(course, schedule, professors, curriculum);
-
-        for(Table.Cell<Integer, Integer, Map<String, ArrayList<String>>> cell : itinerary.cellSet()){
-            System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + cell.getValue().toString());
-        }
-
+        curriculum = new ArrayList<>();
+        curriculum.add(new Lesson(1 ,1, "предмет_1" ));
+        curriculum.add(new Lesson(1 ,2, "предмет_2" ));
+        curriculum.add(new Lesson(1 ,2, "предмет_3" ));
+        curriculum.add(new Lesson(1 ,4, "предмет_4" ));
+        curriculum.add(new Lesson(1 ,1, "предмет_5" ));
+        curriculum.add(new Lesson(1 ,1, "предмет_6" ));
+        curriculum.add(new Lesson(1 ,2, "предмет_7" ));
+        professors = new ArrayList<>();
+        professors.add(new Professor("преп_1", "предмет_1"));
+        professors.add(new Professor("преп_2", "предмет_2"));
+        professors.add(new Professor("преп_3", "предмет_3"));
+        professors.add(new Professor("преп_4", "предмет_4"));
+        professors.add(new Professor("преп_5", "предмет_5"));
+        professors.add(new Professor("преп_6", "предмет_6"));
+        professors.add(new Professor("преп_7", "предмет_7"));
+        itinerary = makeSchedule(courseMap, schedule, professors, curriculum);
+        ArgumentsReader ar = new ArgumentsReader();
+        ar.read(curriculum,
+                professors,
+                schedule,
+                courseMap);
+        //handleCommands();
     }
 
     public static Table<Integer, Integer, Map<String, ArrayList<String>>> makeSchedule(Map<Integer, ArrayList<Group>> course, Map<String, ArrayList<Lesson>> schedule, ArrayList<Professor> professors, ArrayList<Lesson> curriculum){
@@ -86,8 +95,7 @@ public class Main {
             entry.getValue().clear();
         }
     }
-    public static void assignLessons(Map<String, ArrayList<Lesson>> schedule, List<Lesson> lessons, int course){
-        Collections.shuffle(lessons);
+    public static void assignLessons(Map<String, ArrayList<Lesson>> schedule, ArrayList<Lesson> lessons, int course){
         int lessonIndex = 0;
         int maxPairs = schedule.size();
         while(lessonIndex < lessons.size()){
@@ -174,7 +182,7 @@ public class Main {
         while (true){
             if(professors.isEmpty()) System.out.println("нету преподовательского состава\nВведите преподов");
             for(Professor professor: professors){
-                System.out.println(professor.getSurname() + "преподает" + professor.getSubject());
+                System.out.println(professor.getSurname() + " преподает " + professor.getSubject());
             }
             String str = brd.readLine();
             if(str.equals("Конец")) break;
@@ -185,7 +193,6 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        brd.close();
         return professors;
     }
 }

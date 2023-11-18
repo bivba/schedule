@@ -36,4 +36,8 @@ public class Professor {
         this.subject = subject;
     }
     public Professor(){}
+
+    public Professor(String surname) {
+        this.surname = surname;
+    }
 }

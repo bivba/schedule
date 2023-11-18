@@ -23,7 +23,9 @@ public class ArgumentsReader {
         Options options = new Options();
         Option show = Option.builder("s")
                 .longOpt("show")
-                .desc("show schedule for <course number> <group number> <day name>/ show full schedule(-s all)")
+                .desc("show schedule for <course number> <group number> <day name>/ show full schedule(-s all)/" +
+                        " on week for group(<course num> <group num>)/ on week for course" +
+                        "<course num>")
                 .hasArgs()
                 .build();
         show.setRequired(false);

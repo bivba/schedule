@@ -39,7 +39,8 @@ public class ArgumentsReader {
 
         Option add = Option.builder("a")
                 .longOpt("add")
-                .desc("add subj in curriculum(<course number> <academic hour> <subj name> <professor name>/ <course number> <group number> <day name>(с большой буквы) <subj name>")
+                .desc("add subj in curriculum(<course number> <academic hour> <subj name> <professor name>/ <course number> <group number> " +
+                        "<day name>(с большой буквы) <subj name> <professor name>")
                 .hasArgs()
                 .build();
         add.setRequired(false);

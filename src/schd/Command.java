@@ -1,8 +1,11 @@
 package schd;
 
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Command {
@@ -37,38 +40,47 @@ public class Command {
     public Command() {
     }
 
-    public void execute(Table<Integer, Integer, Map<String, ArrayList<String>>> itinerary){
-        int c = 0;
+    public Table<Integer, Integer, Map<String, ArrayList<String>>> execute(Table<Integer, Integer, Map<String, ArrayList<String>>> itinerary){
+        Table<Integer, Integer, Map<String, ArrayList<String>>> it = HashBasedTable.create();
         if(day.equals("Суббота") || day.equals("Воскресенье")) {
-            System.out.println("пар нет");
-            return;
+            return it;
         }
         for(Table.Cell<Integer, Integer, Map<String, ArrayList<String>>> cell : itinerary.cellSet()){
             for(Map.Entry<String, ArrayList<String>> entry : cell.getValue().entrySet()){
                 if(cell.getRowKey() == course && cell.getColumnKey() == group && entry.getKey().equals(day)) {
-                    System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + entry.getKey() + " " + entry.getValue().toString());
-                    c = 1;
+                    Map<String, ArrayList<String>> temp = new HashMap<>();
+                    temp.put(entry.getKey(), entry.getValue());
+                    it.put(cell.getRowKey(), cell.getColumnKey(), temp);
+                    //System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + entry.getKey() + " " + entry.getValue().toString());
+                    return it;
                 }
                 else if(entry.getKey().equals(day) && cell.getRowKey() == course && group == -1){
-                    System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + entry.getKey() + " " + entry.getValue().toString());
-                    c = 1;
+                    Map<String, ArrayList<String>> temp = new HashMap<>();
+                    temp.put(entry.getKey(), entry.getValue());
+                    it.put(cell.getRowKey(), cell.getColumnKey(), temp);
+                    return it;
                 }
                 else if(entry.getKey().equals(day) && course == -1 && group == -1){
-                    System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + entry.getKey() + " " + entry.getValue().toString());;
-                    c = 1;
+                    Map<String, ArrayList<String>> temp = new HashMap<>();
+                    temp.put(entry.getKey(), entry.getValue());
+                    it.put(cell.getRowKey(), cell.getColumnKey(), temp);
+                    return it;
                 }
             }
-            if(cell.getRowKey() == course && cell.getColumnKey() == group && c == 0){
-                System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + cell.getValue().toString());
+            if(cell.getRowKey() == course && cell.getColumnKey() == group){
+                it.put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+                return it;
             }
-            else if(cell.getRowKey() == course && c == 0 && group == -1){
-                System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + cell.getValue().toString());
+            else if(cell.getRowKey() == course && group == -1){
+                it.put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
+                return it;
             }
         }
+        return it;
     }
-    public void printAllSchedule(Table<Integer, Integer, Map<String, ArrayList<String>>> itinerary){
-        for(Table.Cell<Integer, Integer, Map<String, ArrayList<String>>> cell : itinerary.cellSet()){
-            System.out.println("курс: " + cell.getRowKey() + " " + "Группа: " + cell.getColumnKey() + " " + cell.getValue().toString());
-        }
+    public Table<Integer, Integer, Map<String, ArrayList<String>>> printAllSchedule(Table<Integer, Integer, Map<String, ArrayList<String>>> itinerary){
+        Table<Integer, Integer, Map<String, ArrayList<String>>> it = HashBasedTable.create();
+        it.putAll(itinerary);
+        return it;
     }
 }

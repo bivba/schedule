@@ -58,7 +58,7 @@ public class Main {
                 professors,
                 schedule,
                 courseMap);
-        //handleCommands();
+
     }
 
     public static Table<Integer, Integer, Map<String, ArrayList<String>>> makeSchedule(Map<Integer, ArrayList<Group>> course, Map<String, ArrayList<Lesson>> schedule, ArrayList<Professor> professors, ArrayList<Lesson> curriculum){
